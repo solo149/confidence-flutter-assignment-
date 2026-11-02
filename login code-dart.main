@@ -1,0 +1,378 @@
+Import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const ConfidenceHubApp());
+}
+
+class ConfidenceHubApp extends StatelessWidget {
+  const ConfidenceHubApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Confidence Hub',
+      theme: ThemeData(
+        useMaterial3: true,
+        fontFamily: 'Roboto',
+      ),
+      home: const LoginScreen(),
+    );
+  }
+}
+
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  bool isSignUp = false;
+  bool hidePassword = true;
+
+  final nameController = TextEditingController();
+  final surnameController = TextEditingController();
+  final middleNameController = TextEditingController();
+  final dobController = TextEditingController();
+  final phoneController = TextEditingController();
+  final emailController = TextEditingController();
+  final addressController = TextEditingController();
+  final passwordController = TextEditingController();
+  final positionController = TextEditingController();
+  final employeeIdController = TextEditingController();
+  final cvController = TextEditingController();
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    surnameController.dispose();
+    middleNameController.dispose();
+    dobController.dispose();
+    phoneController.dispose();
+    emailController.dispose();
+    addressController.dispose();
+    passwordController.dispose();
+    positionController.dispose();
+    employeeIdController.dispose();
+    cvController.dispose();
+    super.dispose();
+  }
+
+  Widget inputField(
+    String label,
+    TextEditingController controller, {
+    bool password = false,
+    bool required = true,
+    TextInputType keyboard = TextInputType.text,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 15),
+      child: TextFormField(
+        controller: controller,
+        keyboardType: keyboard,
+        obscureText: password && hidePassword,
+        validator: (value) {
+          if (required && (value == null || value.trim().isEmpty)) {
+            return '$label is required';
+          }
+          return null;
+        },
+        decoration: InputDecoration(
+          labelText: label,
+          filled: true,
+          fillColor: Colors.white,
+          suffixIcon: password
+              ? IconButton(
+                  icon: Icon(
+                    hidePassword
+                        ? Icons.visibility_off
+                        : Icons.visibility,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      hidePassword = !hidePassword;
+                    });
+                  },
+                )
+              : null,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void showMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
+
+  void submitForm() {
+    showMessage(
+      isSignUp
+          ? 'Job seeker registration submitted!'
+          : 'Employee sign-in submitted!',
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.yellow,
+      body: Stack(
+        children: [
+          // Interlocking background colors
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: 210,
+              decoration: const BoxDecoration(
+                color: Colors.red,
+                borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(100),
+                ),
+              ),
+            ),
+          ),
+
+          Positioned(
+            top: 80,
+            right: 0,
+            child: Container(
+              width: 150,
+              height: 130,
+              decoration: const BoxDecoration(
+                color: Colors.blue,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(90),
+                ),
+              ),
+            ),
+          ),
+
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: 120,
+              decoration: const BoxDecoration(
+                color: Colors.blue,
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(90),
+                ),
+              ),
+            ),
+          ),
+
+          SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  const SizedBox(height: 30),
+
+                  const Text(
+                    'CONFIDENCE HUB',
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      letterSpacing: 2,
+                    ),
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  const Text(
+                    'Your confidence, your career',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                    ),
+                  ),
+
+                  const SizedBox(height: 35),
+
+                  Container(
+                    padding: const EdgeInsets.all(22),
+                    decoration: BoxDecoration(
+                      color: Colors.yellow,
+                      borderRadius: BorderRadius.circular(25),
+                      border: Border.all(
+                        color: Colors.white,
+                        width: 2,
+                      ),
+                    ),
+                    child: Form(
+                      child: Column(
+                        children: [
+                          Text(
+                            isSignUp
+                                ? 'Create Job Seeker Account'
+                                : 'Employee Sign In',
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 23,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+
+                          const SizedBox(height: 25),
+
+                          if (!isSignUp) ...[
+                            inputField('Name', nameController),
+                            inputField('Surname', surnameController),
+                            inputField(
+                              'Password',
+                              passwordController,
+                              password: true,
+                            ),
+                            inputField(
+                              'Job Position',
+                              positionController,
+                            ),
+                            inputField(
+                              'Employee ID Number',
+                              employeeIdController,
+                            ),
+                          ],
+
+                          if (isSignUp) ...[
+                            inputField('Name', nameController),
+                            inputField('Surname', surnameController),
+                            inputField(
+                              'Middle Name (Optional)',
+                              middleNameController,
+                              required: false,
+                            ),
+                            inputField(
+                              'Date of Birth (DOB)',
+                              dobController,
+                              keyboard: TextInputType.datetime,
+                            ),
+                            inputField(
+                              'Phone Number',
+                              phoneController,
+                              keyboard: TextInputType.phone,
+                            ),
+                            inputField(
+                              'Gmail Address',
+                              emailController,
+                              keyboard: TextInputType.emailAddress,
+                            ),
+                            inputField(
+                              'Home Address',
+                              addressController,
+                            ),
+
+                            inputField(
+                              'Upload CV / Application Details',
+                              cvController,
+                              required: false,
+                            ),
+
+                            ElevatedButton.icon(
+                              onPressed: () {
+                                showMessage(
+                                  'CV file picker will be added.',
+                                );
+                              },
+                              icon: const Icon(Icons.upload_file),
+                              label: const Text('Choose CV File'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue,
+                                foregroundColor: Colors.white,
+                              ),
+                            ),
+
+                            const SizedBox(height: 15),
+
+                            inputField(
+                              'Create Password',
+                              passwordController,
+                              password: true,
+                            ),
+                          ],
+
+                          const SizedBox(height: 10),
+
+                          SizedBox(
+                            width: double.infinity,
+                            height: 50,
+                            child: ElevatedButton(
+                              onPressed: submitForm,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              child: Text(
+                                isSignUp ? 'SIGN UP' : 'SIGN IN',
+                                style: const TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(height: 20),
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                isSignUp
+                                    ? 'Already have an account?'
+                                    : "Don't have an account?",
+                              ),
+
+                              TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    isSignUp = !isSignUp;
+                                  });
+                                },
+                                child: Text(
+                                  isSignUp ? 'Sign In' : 'Sign Up',
+                                  style: const TextStyle(
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 25),
+
+                  const Text(
+                    '© 2026 Confidence Hub',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
